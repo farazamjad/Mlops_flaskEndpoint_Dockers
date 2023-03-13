@@ -1,19 +1,34 @@
 pipeline {
     agent any
+    
+    environment {
+        DOCKER_REGISTRY = "https://registry.hub.docker.com"
+        IMAGE_NAME = "farazamjad/model-image"
+        IMAGE_TAG = "latest"
+    }
+    
     stages {
+        stage('Checkout SCM') {
+            steps {
+                checkout scm
+            }
+        }
+        
         stage('Build Docker image') {
             steps {
                 script {
-                    docker.withRegistry('https://registry.hub.docker.com') {
-                        def customImage = docker.build("model-image:${env.BUILD_ID}")
-                        customImage.push()
-                    }
+                    docker.build("${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}")
                 }
             }
         }
+        
         stage('Run container') {
             steps {
-                sh "docker run -d -p 5000:5000 model-image:${env.BUILD_ID}"
+                script {
+                    docker.withRegistry("${DOCKER_REGISTRY}", "dockerhub_creds") {
+                        docker.image("${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}").run("-p 5000:5000 --name model-image -d")
+                    }
+                }
             }
         }
     }
