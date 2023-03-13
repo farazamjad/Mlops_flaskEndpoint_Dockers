@@ -3,7 +3,7 @@ pipeline {
     
     environment {
         DOCKER_REGISTRY = "https://registry.hub.docker.com"
-        IMAGE_NAME = "farazamjad/model-image"
+        IMAGE_NAME = "farazzz/model-image"
         IMAGE_TAG = "latest"
     }
     
