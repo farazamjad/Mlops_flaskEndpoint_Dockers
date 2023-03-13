@@ -4,7 +4,7 @@
         stage('Build Docker image') {
             steps {
                 script {
-                    docker.withRegistry('https://registry.hub.docker.com', '') {
+                    docker.withRegistry('https://registry.hub.docker.com') {
                         def customImage = docker.build("model-image:${env.BUILD_ID}")
                         customImage.push()
                     }
