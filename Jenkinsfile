@@ -1,4 +1,4 @@
- pipeline {
+pipeline {
     agent any
     stages {
         stage('Build Docker image') {
@@ -13,7 +13,7 @@
         }
         stage('Run container') {
             steps {
-                sh 'docker run -d -p 5000:5000 model-image:${env.BUILD_ID}'
+                sh "docker run -d -p 5000:5000 model-image:${env.BUILD_ID}"
             }
         }
     }
