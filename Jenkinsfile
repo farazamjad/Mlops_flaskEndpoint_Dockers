@@ -2,7 +2,7 @@ pipeline {
     agent any
     
     environment {
-        DOCKER_REGISTRY = "https://registry.hub.docker.com"
+        DOCKER_REGISTRY = "docker pull farazzz/mlops:latest"
         IMAGE_NAME = "farazzz/model-image"
         IMAGE_TAG = "latest"
     }
