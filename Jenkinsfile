@@ -9,7 +9,7 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        sh 'docker build -t mlops/model-image:latest .'
+        sh 'docker build -t model-image:latest .'
       }
     }
     stage('Login') {
@@ -19,7 +19,7 @@ pipeline {
     }
     stage('Push') {
       steps {
-        sh 'docker push mlops/model-image:latest'
+        sh 'docker push model-image:latest'
       }
     }
   }
