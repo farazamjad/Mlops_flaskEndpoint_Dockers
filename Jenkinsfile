@@ -20,8 +20,9 @@ pipeline {
     stage('Push image') {
         withDockerRegistry([ credentialsId: "faraz-dockerhub", url: "" ]) {
         bat "docker push model-image:latest"
-        }
+       }
     }
+  }
   post {
     always {
       sh 'docker logout'
