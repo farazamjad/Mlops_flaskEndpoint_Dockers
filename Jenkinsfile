@@ -9,7 +9,7 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        sh 'docker build -t model-image:first .'
+        sh 'docker build -t model-image:latest .'
       }
     }
     stage('Login') {
@@ -20,7 +20,7 @@ pipeline {
     stage('Push Docker Image') {
       steps {
         withDockerRegistry([credentialsId: "faraz-dockerhub", url: "https://index.docker.io/v1/"]) {
-          sh  "docker push farazzz/mlops1:first"
+          sh  "docker push farazzz/mlops:lateset"
                 }
             }
         }
