@@ -20,7 +20,7 @@ pipeline {
     stage('Push Docker Image') {
       steps {
         withDockerRegistry([credentialsId: "faraz-dockerhub", url: "https://index.docker.io/v1/"]) {
-          sh  "docker push farazzz/mlops:lateset"
+          sh  "docker push farazzz/mlops:latest"
                 }
             }
         }
