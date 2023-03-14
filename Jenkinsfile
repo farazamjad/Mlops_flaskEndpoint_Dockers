@@ -4,12 +4,12 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'docker build -t myimage:latest .'
+                sh 'docker build -t model-image:latest .'
             }
         }
         stage('Run') {
             steps {
-                sh 'docker run -d -p 8080:80 --name mycontainer myimage:latest'
+                sh 'docker run -d -p 5080:80 --name mycontainer model-imabe:latest'
             }
         }
     }
