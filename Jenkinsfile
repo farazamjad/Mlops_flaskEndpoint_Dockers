@@ -20,7 +20,7 @@ pipeline {
     stage('Push Docker Image') {
       steps {
         withDockerRegistry([credentialsId: "faraz-dockerhub", url: "https://index.docker.io/v1/"]) {
-                    bat "docker push model-image:latest"
+          sh  "docker push model-image:latest"
                 }
             }
         }
