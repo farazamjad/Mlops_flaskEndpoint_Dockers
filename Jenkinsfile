@@ -26,7 +26,7 @@ pipeline {
         }
         stage('Run Container') {
       steps {
-        sh 'docker run -d -p 8080:80 farazzz/mlops:latest'
+        sh 'docker run -d -p 5080:80 farazzz/mlops:latest'
       }
     }
   }
