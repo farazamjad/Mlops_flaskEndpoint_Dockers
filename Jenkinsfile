@@ -1,6 +1,6 @@
 pipeline {
   environment {
-    imagename = "model-image"
+    imagename = "farazzz/mlops"
     registryCredential = 'farazzz'
     dockerImage = ''
   }
