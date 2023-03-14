@@ -1,35 +1,40 @@
 pipeline {
   environment {
-    registry = "https://hub.docker.com"
-    registryCredential = 'farazzz/faraz121,.'
-    imageName = "model-image"
-    dockerImageTag = "latest"
+    imagename = "model-image"
+    registryCredential = 'farazzz'
+    dockerImage = ''
   }
   agent any
-  
-    
-    stage('Building Docker Image') {
+  stages {
+    stage('Cloning Git') {
       steps {
+        git([url: 'https://github.com/farazamjad/Mlops_flaskEndpoint_Dockers.git', branch: 'master', credentialsId: 'farazamjad'])
+ 
+      }
+    }
+    stage('Building image') {
+      steps{
         script {
-          dockerImage = docker.build("${registry}/${imageName}:${dockerImageTag}", "-f Dockerfile .")
+          dockerImage = docker.build imagename
         }
       }
     }
-    stage('Push Docker Image') {
-      steps {
+    stage('Deploy Image') {
+      steps{
         script {
-          docker.withRegistry( "${registry}", registryCredential ) {
-            dockerImage.push()
+          docker.withRegistry( '', registryCredential ) {
+            dockerImage.push("$BUILD_NUMBER")
+             dockerImage.push('latest')
           }
         }
       }
     }
-    stage('Deploy to Container') {
-      steps {
-        script {
-          docker.image("${registry}/${imageName}:${dockerImageTag}").run("-p 5000:5000 --name ${imageName}")
-        }
+    stage('Remove Unused docker image') {
+      steps{
+        sh "docker rmi $imagename:$BUILD_NUMBER"
+         sh "docker rmi $imagename:latest"
+ 
       }
     }
   }
-
+}
