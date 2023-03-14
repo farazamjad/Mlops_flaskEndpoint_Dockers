@@ -24,7 +24,13 @@ pipeline {
                 }
             }
         }
+        stage('Run Container') {
+      steps {
+        sh 'docker run -d -p 8080:80 farazzz/mlops:latest'
       }
+    }
+  }
+
 
   post {
     always {
