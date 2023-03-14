@@ -17,14 +17,15 @@ pipeline {
         sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
       }
     }
-    stage('Push image') {
-       steps{
-        withDockerRegistry([ credentialsId: "faraz-dockerhub", url: "" ]) {
-        sh "docker push model-image:latest"
-       }
+    stage('Push Docker Image') {
+      steps {
+        withDockerRegistry([credentialsId: "faraz-dockerhub", url: "https://index.docker.io/v1/"]) {
+                    bat "docker push model-image:latest"
+                }
+            }
+        }
       }
-    }
-  }
+
   post {
     always {
       sh 'docker logout'
