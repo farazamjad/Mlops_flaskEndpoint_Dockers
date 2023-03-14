@@ -18,9 +18,11 @@ pipeline {
       }
     }
     stage('Push image') {
+       steps{
         withDockerRegistry([ credentialsId: "faraz-dockerhub", url: "" ]) {
         bat "docker push model-image:latest"
        }
+      }
     }
   }
   post {
