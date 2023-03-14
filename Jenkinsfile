@@ -7,7 +7,7 @@ pipeline {
   }
   agent any
   
-    }
+    
     stage('Building Docker Image') {
       steps {
         script {
