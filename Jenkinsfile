@@ -1,25 +1,35 @@
 pipeline {
-    agent any {
-        docker {
-            image 'python:3.7'
-            args '-u root'
-        }
+  environment {
+    registry = "https://hub.docker.com"
+    registryCredential = 'farazzz/faraz121,.'
+    imageName = "model-image"
+    dockerImageTag = "latest"
+  }
+  agent any
+  
     }
-    stages {
-        stage('Checkout SCM') {
-            steps {
-                checkout scm
-            }
+    stage('Building Docker Image') {
+      steps {
+        script {
+          dockerImage = docker.build("${registry}/${imageName}:${dockerImageTag}", "-f Dockerfile .")
         }
-        stage('Build Docker image') {
-            steps {
-                sh 'docker build -t farazzz/mlops .'
-            }
-        }
-        stage('Run container') {
-            steps {
-                sh 'docker run -p 5000:5000 farazzz/mlops'
-            }
-        }
+      }
     }
+    stage('Push Docker Image') {
+      steps {
+        script {
+          docker.withRegistry( "${registry}", registryCredential ) {
+            dockerImage.push()
+          }
+        }
+      }
+    }
+    stage('Deploy to Container') {
+      steps {
+        script {
+          docker.image("${registry}/${imageName}:${dockerImageTag}").run("-p 5000:5000 --name ${imageName}")
+        }
+      }
+    }
+  }
 }
