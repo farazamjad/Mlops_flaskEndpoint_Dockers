@@ -1,34 +1,24 @@
 pipeline {
-    agent any
-    
-    environment {
-        DOCKER_REGISTRY = "docker pull farazzz/mlops:latest"
-        IMAGE_NAME = "farazzz/model-image"
-        IMAGE_TAG = "latest"
+    agent {
+        docker {
+            image 'python:3.7'
+            args '-u root'
+        }
     }
-    
     stages {
         stage('Checkout SCM') {
             steps {
                 checkout scm
             }
         }
-        
         stage('Build Docker image') {
             steps {
-                script {
-                    docker.build("${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}")
-                }
+                sh 'docker build -t farazzz/mlops .'
             }
         }
-        
         stage('Run container') {
             steps {
-                script {
-                    docker.withRegistry("${DOCKER_REGISTRY}", "dockerhub_creds") {
-                        docker.image("${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}").run("-p 5000:5000 --name model-image -d")
-                    }
-                }
+                sh 'docker run -p 5000:5000 farazzz/mlops'
             }
         }
     }
