@@ -1,38 +1,22 @@
 pipeline {
-  environment {
-    imagename = "farazzz/mlops"
-    registryCredential = 'farazzz'
-    dockerImage = ''
-  }
-  agent any
-  stages {
-    stage('Cloning Git') {
-      steps {
-        git branch: 'master', credentialsId: 'farazamjad', url: 'https://github.com/farazamjad/Mlops_flaskEndpoint_Dockers.git'
-      }
-    }
-    stage('Building image') {
-      steps{
-        script {
-          dockerImage = docker.build(imagename)
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+                sh 'docker build -t myimage:latest .'
+            }
         }
-      }
-    }
-    stage('Deploy Image') {
-      steps{
-        script {
-          docker.withRegistry(registryCredential) {
-            dockerImage.push("$BUILD_NUMBER")
-            dockerImage.push('latest')
-          }
+        stage('Run') {
+            steps {
+                sh 'docker run -d -p 8080:80 --name mycontainer myimage:latest'
+            }
         }
-      }
     }
-    stage('Remove Unused docker image') {
-      steps{
-        sh "docker rmi $imagename:$BUILD_NUMBER"
-        sh "docker rmi $imagename:latest"
-      }
+
+    post {
+        always {
+            sh 'docker stop mycontainer || true && docker rm mycontainer || true'
+        }
     }
-  }
 }
